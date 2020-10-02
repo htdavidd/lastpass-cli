@@ -1055,13 +1055,20 @@ static void account_set_group_name(struct account *account,
 				   const char *groupname,
 				   unsigned const char key[KDF_HASH_LEN])
 {
-	const char *slash = 0;
-    for (const char *chr = groupname + strlen(groupname) - 1; chr >= groupname; chr--) {
+	char* full_name = xstrdup(groupname);
+	char *slash = 0;
+	char* last_chr = full_name + strlen(full_name) - 1;
+    for (char *chr = last_chr; chr >= full_name; chr--) {
         if (*chr == '/') {
-            if (chr == groupname)
+            if (chr == full_name)
                 slash = chr;
-            else if (*(chr - 1) == '/')
+            else if (*(chr - 1) == '/') {
+				for (char *swap = chr; swap < last_chr; swap++) {
+					*swap = *(swap + 1);
+				}
+				last_chr--;
                 chr--;
+			}
             else
             {
                 slash = chr;
@@ -1069,13 +1076,20 @@ static void account_set_group_name(struct account *account,
             }
         }
     }
+	if (last_chr < full_name + strlen(full_name) - 1) {
+		char *old_full_name = full_name;
+		full_name = strndup(full_name, last_chr - full_name + 1);
+		slash = full_name + (slash - old_full_name);
+		free(old_full_name);
+	}
 	if (!slash) {
-		account_set_name(account, xstrdup(groupname), key);
+		account_set_name(account, xstrdup(full_name), key);
 		account_set_group(account, xstrdup(""), key);
 	} else {
 		account_set_name(account, xstrdup(slash + 1), key);
-		account_set_group(account, xstrndup(groupname, slash - groupname), key);
+		account_set_group(account, xstrndup(full_name, slash - full_name), key);
 	}
+	free(full_name);
 }
 
 void account_set_fullname(struct account *account, char *fullname, unsigned const char key[KDF_HASH_LEN])
