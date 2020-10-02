@@ -1120,6 +1120,21 @@ void account_set_fullname(struct account *account, char *fullname, unsigned cons
 		if (tmp)
 			groupname = tmp + 1;
 	}
+	char* new_full_name = account_set_group_name(account, groupname, key);
+	free(account->fullname);
+	account->fullname = fullname;
+}
+
+void account_set_fullname_with_escaping(struct account *account, char *fullname, unsigned const char key[KDF_HASH_LEN])
+{
+	char *groupname = fullname;
+
+	/* skip Shared-XXX/ for shared folders */
+	if (is_shared_folder_name(fullname)) {
+		char *tmp = strchr(fullname, '/');
+		if (tmp)
+			groupname = tmp + 1;
+	}
 	char* new_full_name = account_set_group_name_with_escaping(account, groupname, key);
 	free(account->fullname);
 	free(fullname);
