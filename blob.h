@@ -165,6 +165,7 @@ void account_set_password(struct account *account, char *password, unsigned cons
 void account_set_group(struct account *account, char *group, unsigned const char key[KDF_HASH_LEN]);
 void account_set_name(struct account *account, char *name, unsigned const char key[KDF_HASH_LEN]);
 void account_set_fullname(struct account *account, char *fullname, unsigned const char key[KDF_HASH_LEN]);
+void account_set_fullname_with_escaping(struct account *account, char *fullname, unsigned const char key[KDF_HASH_LEN]);
 void account_set_url(struct account *account, char *url, unsigned const char key[KDF_HASH_LEN]);
 void account_set_note(struct account *account, char *note, unsigned const char key[KDF_HASH_LEN]);
 void account_set_appname(struct account *account, char *appname, unsigned const char key[KDF_HASH_LEN]);
