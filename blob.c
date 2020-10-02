@@ -1160,8 +1160,8 @@ void account_assign_share(struct blob *blob, struct account *account,
 	/* update group name to not include new share, if needed */
 	if (share) {
 		char* new_full_name = account_set_group_name(account, slash + 1, key);
-		free(account->full_name);
-		account->full_name = new_full_name;
+		free(account->fullname);
+		account->fullname = new_full_name;
 	}
 
 reencrypt:
