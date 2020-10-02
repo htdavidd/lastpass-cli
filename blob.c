@@ -1051,7 +1051,7 @@ void account_reencrypt(struct account *account, const unsigned char key[KDF_HASH
  * Set just group and name, assuming we've stripped off any leading
  * shared folder from fullname.
  */
-static void account_set_group_name(struct account *account,
+static char* account_set_group_name(struct account *account,
 				   const char *groupname,
 				   unsigned const char key[KDF_HASH_LEN])
 {
@@ -1089,7 +1089,7 @@ static void account_set_group_name(struct account *account,
 		account_set_name(account, xstrdup(slash + 1), key);
 		account_set_group(account, xstrndup(full_name, slash - full_name), key);
 	}
-	free(full_name);
+	return full_name;
 }
 
 void account_set_fullname(struct account *account, char *fullname, unsigned const char key[KDF_HASH_LEN])
@@ -1102,9 +1102,10 @@ void account_set_fullname(struct account *account, char *fullname, unsigned cons
 		if (tmp)
 			groupname = tmp + 1;
 	}
-	account_set_group_name(account, groupname, key);
+	char* new_full_name = account_set_group_name(account, groupname, key);
 	free(account->fullname);
-	account->fullname = fullname;
+	free(fullname)
+	account->fullname = new_full_name;
 }
 
 struct share *find_unique_share(struct blob *blob, const char *name)
@@ -1157,8 +1158,11 @@ void account_assign_share(struct blob *blob, struct account *account,
 	account->share = share;
 
 	/* update group name to not include new share, if needed */
-	if (share)
-		account_set_group_name(account, slash + 1, key);
+	if (share) {
+		char* new_full_name = account_set_group_name(account, slash + 1, key);
+		free(account->full_name);
+		account->full_name = new_full_name;
+	}
 
 reencrypt:
 	if (old_share != account->share)
