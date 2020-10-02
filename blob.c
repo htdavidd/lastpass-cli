@@ -1055,8 +1055,8 @@ static void account_set_group_name(struct account *account,
 				   const char *groupname,
 				   unsigned const char key[KDF_HASH_LEN])
 {
-	char *slash = 0;
-    for (char *chr = groupname + strlen(groupname) - 1; chr >= groupname; chr--) {
+	const char *slash = 0;
+    for (const char *chr = groupname + strlen(groupname) - 1; chr >= groupname; chr--) {
         if (*chr == '/') {
             if (chr == groupname)
                 slash = chr;
