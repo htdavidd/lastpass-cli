@@ -1078,7 +1078,7 @@ static void account_set_group_name(struct account *account,
     }
 	if (last_chr < full_name + strlen(full_name) - 1) {
 		char *old_full_name = full_name;
-		full_name = strndup(full_name, last_chr - full_name + 1);
+		full_name = xstrndup(full_name, last_chr - full_name + 1);
 		slash = full_name + (slash - old_full_name);
 		free(old_full_name);
 	}
