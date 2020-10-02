@@ -1055,7 +1055,20 @@ static void account_set_group_name(struct account *account,
 				   const char *groupname,
 				   unsigned const char key[KDF_HASH_LEN])
 {
-	char *slash = strrchr(groupname, '/');
+	char *slash = 0;
+    for (char *chr = groupname + strlen(groupname) - 1; chr >= groupname; chr--) {
+        if (*chr == '/') {
+            if (chr == groupname)
+                slash = chr;
+            else if (*(chr - 1) == '/')
+                chr--;
+            else
+            {
+                slash = chr;
+                break;
+            }
+        }
+    }
 	if (!slash) {
 		account_set_name(account, xstrdup(groupname), key);
 		account_set_group(account, xstrdup(""), key);
