@@ -1104,7 +1104,7 @@ void account_set_fullname(struct account *account, char *fullname, unsigned cons
 	}
 	char* new_full_name = account_set_group_name(account, groupname, key);
 	free(account->fullname);
-	free(fullname)
+	free(fullname);
 	account->fullname = new_full_name;
 }
 
